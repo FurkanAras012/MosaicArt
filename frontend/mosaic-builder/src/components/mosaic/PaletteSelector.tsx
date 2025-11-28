@@ -164,7 +164,7 @@ export const PaletteSelector: React.FC<PaletteSelectorProps> = ({
           {customPalette.length > 0 && (
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
-                Palette Colors ({customPalette.length})
+                {t.palette.modes.custom.paletteLabel} ({customPalette.length})
               </label>
               <div className="flex flex-wrap gap-2">
                 {customPalette.map((color, index) => (
@@ -195,7 +195,7 @@ export const PaletteSelector: React.FC<PaletteSelectorProps> = ({
           {customPalette.length === 0 && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
               <p className="text-sm text-yellow-800">
-                <span className="font-medium">Note:</span> Add at least one color to your custom palette
+                <span className="font-medium">{t.common.note}</span> {t.palette.modes.custom.emptyNote}
               </p>
             </div>
           )}

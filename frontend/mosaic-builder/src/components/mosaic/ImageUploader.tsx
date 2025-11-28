@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ImageUploaderProps {
   onImageUpload: (base64: string, width: number, height: number) => void;
@@ -13,6 +14,7 @@ const ACCEPTED_FORMATS = {
 };
 
 export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, disabled = false }) => {
+  const { t } = useLanguage();
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -21,7 +23,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, dis
       setError(null);
 
       if (acceptedFiles.length === 0) {
-        setError('Please select a valid image file (JPG or PNG)');
+        setError(t.imageUpload.error.selectValidFile);
         return;
       }
 
@@ -29,7 +31,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, dis
 
       // Validate file size
       if (file.size > MAX_FILE_SIZE) {
-        setError(`File size exceeds 10MB limit (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+        setError(`${t.imageUpload.error.fileTooLarge} (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
         return;
       }
 
@@ -45,16 +47,16 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, dis
           onImageUpload(base64String, img.width, img.height);
         };
         img.onerror = () => {
-          setError('Failed to load image dimensions');
+          setError(t.imageUpload.error.loadDimensionsFailed);
         };
         img.src = base64String;
       };
       reader.onerror = () => {
-        setError('Failed to read file');
+        setError(t.imageUpload.error.readFileFailed);
       };
       reader.readAsDataURL(file);
     },
-    [onImageUpload]
+    [onImageUpload, t.imageUpload.error.fileTooLarge, t.imageUpload.error.loadDimensionsFailed, t.imageUpload.error.readFileFailed, t.imageUpload.error.selectValidFile]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -95,14 +97,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageUpload, dis
             />
           </svg>
           {isDragActive ? (
-            <p className="text-blue-600 font-medium">Drop the image here</p>
+            <p className="text-blue-600 font-medium">{t.imageUpload.dropActive}</p>
           ) : (
             <>
               <p className="text-gray-600">
-                <span className="font-medium text-blue-600 hover:text-blue-500">Click to upload</span> or drag and
-                drop
+                <span className="font-medium text-blue-600 hover:text-blue-500">{t.imageUpload.uploadCta}</span> {t.imageUpload.uploadOr}
               </p>
-              <p className="text-sm text-gray-500">PNG, JPG up to 10MB</p>
+              <p className="text-sm text-gray-500">{t.imageUpload.uploadHelp}</p>
             </>
           )}
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { saveAs } from 'file-saver';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface MosaicRendererProps {
   imageBase64: string;
@@ -8,6 +9,7 @@ interface MosaicRendererProps {
 }
 
 export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gridWidth, gridHeight }) => {
+  const { t } = useLanguage();
   const handleDownload = () => {
     // Convert base64 to blob
     const base64Data = imageBase64.split(',')[1];
@@ -28,8 +30,8 @@ export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gri
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">Mosaic Result</h3>
-          <p className="text-sm text-gray-600">Grid: {gridWidth} × {gridHeight} tiles</p>
+          <h3 className="text-lg font-semibold text-gray-900">{t.results.mosaic.sectionTitle}</h3>
+          <p className="text-sm text-gray-600">{t.results.mosaic.gridLabel}: {gridWidth} × {gridHeight}</p>
         </div>
         <button
           onClick={handleDownload}
@@ -43,7 +45,7 @@ export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gri
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-          Download PNG
+          {t.results.mosaic.download}
         </button>
       </div>
 
@@ -53,7 +55,7 @@ export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gri
 
       <div className="bg-green-50 border border-green-200 rounded-lg p-3">
         <p className="text-sm text-green-800">
-          <span className="font-medium">Success!</span> Your mosaic has been generated successfully
+          <span className="font-medium">{t.common.success}</span> {t.results.mosaic.success}
         </p>
       </div>
     </div>
