@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "dgSpecHash": "DXWJr6ck9Xw=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\furkan.aras\\Desktop\\Projelerim\\MosaicArt\\backend\\MosaicBuilder.Api\\MosaicBuilder.Api.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\microsoft.aspnetcore.cors\\2.3.0\\microsoft.aspnetcore.cors.2.3.0.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0-rc.2.25502.107\\microsoft.aspnetcore.openapi.10.0.0-rc.2.25502.107.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\microsoft.extensions.apidescription.server\\10.0.0\\microsoft.extensions.apidescription.server.10.0.0.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\microsoft.openapi\\2.3.0\\microsoft.openapi.2.3.0.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\sixlabors.imagesharp\\3.1.12\\sixlabors.imagesharp.3.1.12.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\swashbuckle.aspnetcore\\10.0.1\\swashbuckle.aspnetcore.10.0.1.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\10.0.1\\swashbuckle.aspnetcore.swagger.10.0.1.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\10.0.1\\swashbuckle.aspnetcore.swaggergen.10.0.1.nupkg.sha512",
+    "C:\\Users\\furkan.aras\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\10.0.1\\swashbuckle.aspnetcore.swaggerui.10.0.1.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1510",
+      "level": "Warning",
+      "message": "PackageReference Microsoft.AspNetCore.Cors will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
+      "projectPath": "C:\\Users\\furkan.aras\\Desktop\\Projelerim\\MosaicArt\\backend\\MosaicBuilder.Api\\MosaicBuilder.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\furkan.aras\\Desktop\\Projelerim\\MosaicArt\\backend\\MosaicBuilder.Api\\MosaicBuilder.Api.csproj",
+      "libraryId": "Microsoft.AspNetCore.Cors",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
