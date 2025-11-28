@@ -68,4 +68,31 @@ public class ImageService : IImageService
 
         return await Task.FromResult(image).ConfigureAwait(false);
     }
+
+    /// <inheritdoc/>
+    public double GetDpi(Image<Rgba32> image)
+    {
+        if (image == null)
+            throw new ArgumentNullException(nameof(image));
+
+        var horizontalDpi = image.Metadata.HorizontalResolution; // defaults to 96 if missing
+        var verticalDpi = image.Metadata.VerticalResolution;
+
+        if (horizontalDpi <= 0 && verticalDpi <= 0)
+        {
+            return 96d;
+        }
+
+        if (horizontalDpi <= 0)
+        {
+            return verticalDpi;
+        }
+
+        if (verticalDpi <= 0)
+        {
+            return horizontalDpi;
+        }
+
+        return (horizontalDpi + verticalDpi) / 2.0d;
+    }
 }

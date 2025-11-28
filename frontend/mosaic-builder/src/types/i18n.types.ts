@@ -54,6 +54,14 @@ export interface Translations {
       grid: string;
       tileSize: string;
       totalTiles: string;
+      physicalTile: string;
+      tileWidthCm: string;
+      tileHeightCm: string;
+      physicalHint: string;
+      panelTitle: string;
+      panelWidthCm: string;
+      panelHeightCm: string;
+      panelHint: string;
     };
     tips: {
       title: string;
@@ -119,18 +127,26 @@ export interface Translations {
     analysis: {
       title: string;
       stats: {
-        gridSize: string;
-        totalTiles: string;
-        uniqueColors: string;
-      };
-      exports: {
-        csv: string;
-        json: string;
-      };
-      table: {
-        title: string;
-        color: string;
-        hexCode: string;
+      gridSize: string;
+      totalTiles: string;
+      uniqueColors: string;
+      tileSize: string;
+      dpiDetected: string;
+      panels: string;
+      panelHint: string;
+    };
+    exports: {
+      csv: string;
+      json: string;
+      gridJson: string;
+      panelJson: string;
+      tileIdCsv: string;
+      tileIdJson: string;
+    };
+    table: {
+      title: string;
+      color: string;
+      hexCode: string;
         tileCount: string;
         percentage: string;
         colorLabelPrefix: string;

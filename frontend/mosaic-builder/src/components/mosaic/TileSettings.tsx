@@ -6,6 +6,14 @@ interface TileSettingsProps {
   onTileSizeChange: (size: number) => void;
   imageWidth: number;
   imageHeight: number;
+  tileWidthCm: number;
+  tileHeightCm: number;
+  panelWidthCm: number;
+  panelHeightCm: number;
+  onTileWidthCmChange: (value: number) => void;
+  onTileHeightCmChange: (value: number) => void;
+  onPanelWidthCmChange: (value: number) => void;
+  onPanelHeightCmChange: (value: number) => void;
   disabled?: boolean;
 }
 
@@ -19,6 +27,14 @@ export const TileSettings: React.FC<TileSettingsProps> = ({
   onTileSizeChange,
   imageWidth,
   imageHeight,
+  tileWidthCm,
+  tileHeightCm,
+  panelWidthCm,
+  panelHeightCm,
+  onTileWidthCmChange,
+  onTileHeightCmChange,
+  onPanelWidthCmChange,
+  onPanelHeightCmChange,
   disabled = false,
 }) => {
   const { t } = useLanguage();
@@ -67,6 +83,32 @@ export const TileSettings: React.FC<TileSettingsProps> = ({
       if (calculatedTileSize >= MIN_TILE_SIZE && calculatedTileSize <= MAX_TILE_SIZE) {
         onTileSizeChange(calculatedTileSize);
       }
+    }
+  };
+
+  const handleTileWidthCmChange = (value: number) => {
+    if (value > 0) {
+      onTileWidthCmChange(value);
+      onTileHeightCmChange(value);
+    }
+  };
+
+  const handleTileHeightCmChange = (value: number) => {
+    if (value > 0) {
+      onTileHeightCmChange(value);
+      onTileWidthCmChange(value);
+    }
+  };
+
+  const handlePanelWidthChange = (value: number) => {
+    if (value > 0) {
+      onPanelWidthCmChange(value);
+    }
+  };
+
+  const handlePanelHeightChange = (value: number) => {
+    if (value > 0) {
+      onPanelHeightCmChange(value);
     }
   };
 
@@ -196,6 +238,85 @@ export const TileSettings: React.FC<TileSettingsProps> = ({
           </p>
         </div>
       )}
+
+      {/* Physical tile size & panelization */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-3">
+          <h4 className="text-sm font-semibold text-gray-800">{t.tileSettings.labels.physicalTile}</h4>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="tile-width-cm" className="text-sm font-medium text-gray-700 block mb-1">
+                {t.tileSettings.labels.tileWidthCm}
+              </label>
+              <input
+                id="tile-width-cm"
+                type="number"
+                min={0.1}
+                step={0.1}
+                value={tileWidthCm || ''}
+                onChange={(e) => handleTileWidthCmChange(Number(e.target.value))}
+                disabled={disabled}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+            <div>
+              <label htmlFor="tile-height-cm" className="text-sm font-medium text-gray-700 block mb-1">
+                {t.tileSettings.labels.tileHeightCm}
+              </label>
+              <input
+                id="tile-height-cm"
+                type="number"
+                min={0.1}
+                step={0.1}
+                value={tileHeightCm || ''}
+                onChange={(e) => handleTileHeightCmChange(Number(e.target.value))}
+                disabled={disabled}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+          </div>
+          <p className="text-xs text-gray-600">
+            {t.tileSettings.labels.physicalHint}
+          </p>
+        </div>
+
+        <div className="space-y-3">
+          <h4 className="text-sm font-semibold text-gray-800">{t.tileSettings.labels.panelTitle}</h4>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="panel-width-cm" className="text-sm font-medium text-gray-700 block mb-1">
+                {t.tileSettings.labels.panelWidthCm}
+              </label>
+              <input
+                id="panel-width-cm"
+                type="number"
+                min={1}
+                step={1}
+                value={panelWidthCm || ''}
+                onChange={(e) => handlePanelWidthChange(Number(e.target.value))}
+                disabled={disabled}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+            <div>
+              <label htmlFor="panel-height-cm" className="text-sm font-medium text-gray-700 block mb-1">
+                {t.tileSettings.labels.panelHeightCm}
+              </label>
+              <input
+                id="panel-height-cm"
+                type="number"
+                min={1}
+                step={1}
+                value={panelHeightCm || ''}
+                onChange={(e) => handlePanelHeightChange(Number(e.target.value))}
+                disabled={disabled}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              />
+            </div>
+          </div>
+          <p className="text-xs text-gray-600">{t.tileSettings.labels.panelHint}</p>
+        </div>
+      </div>
 
       {/* Result Preview */}
       {imageWidth > 0 && imageHeight > 0 && (
