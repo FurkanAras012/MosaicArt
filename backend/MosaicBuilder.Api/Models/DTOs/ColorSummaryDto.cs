@@ -14,4 +14,9 @@ public class ColorSummaryDto
     /// Number of tiles using this color
     /// </summary>
     public int Count { get; set; }
+
+    /// <summary>
+    /// Unique identifier assigned to the color family for labeling.
+    /// </summary>
+    public string ColorId { get; set; } = string.Empty;
 }

@@ -1,17 +1,44 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
 import { useLanguage } from '../../contexts/LanguageContext';
+import type { PanelInfo, TileColor } from '../../types/mosaic.types';
 
 interface MosaicRendererProps {
   imageBase64: string;
   gridWidth: number;
   gridHeight: number;
+  tileSizePx: number;
+  tiles: readonly TileColor[];
+  panels: readonly PanelInfo[];
 }
 
-export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gridWidth, gridHeight }) => {
+export const MosaicRenderer: React.FC<MosaicRendererProps> = ({
+  imageBase64,
+  gridWidth,
+  gridHeight,
+  tileSizePx,
+  tiles,
+  panels,
+}) => {
   const { t } = useLanguage();
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [renderSize, setRenderSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+
+  useEffect(() => {
+    if (!imageRef.current) return;
+    const handleResize = () => {
+      setRenderSize({
+        width: imageRef.current?.clientWidth || 0,
+        height: imageRef.current?.clientHeight || 0,
+      });
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [imageBase64]);
+
   const handleDownload = () => {
-    // Convert base64 to blob
     const base64Data = imageBase64.split(',')[1];
     const byteCharacters = atob(base64Data);
     const byteNumbers = new Array(byteCharacters.length);
@@ -21,10 +48,24 @@ export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gri
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: 'image/png' });
 
-    // Download
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     saveAs(blob, `mosaic-${gridWidth}x${gridHeight}-${timestamp}.png`);
   };
+
+  const gridPixelWidth = useMemo(() => gridWidth * tileSizePx, [gridWidth, tileSizePx]);
+  const gridPixelHeight = useMemo(() => gridHeight * tileSizePx, [gridHeight, tileSizePx]);
+
+  const scaleX = gridPixelWidth > 0 ? (renderSize.width || gridPixelWidth) / gridPixelWidth : 1;
+  const scaleY = gridPixelHeight > 0 ? (renderSize.height || gridPixelHeight) / gridPixelHeight : 1;
+
+  const gridStyle = useMemo(
+    () => ({
+      backgroundImage:
+        'linear-gradient(rgba(0,0,0,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.08) 1px, transparent 1px)',
+      backgroundSize: `${tileSizePx * scaleX}px ${tileSizePx * scaleY}px`,
+    }),
+    [scaleX, scaleY, tileSizePx]
+  );
 
   return (
     <div className="space-y-4">
@@ -50,7 +91,38 @@ export const MosaicRenderer: React.FC<MosaicRendererProps> = ({ imageBase64, gri
       </div>
 
       <div className="relative bg-gray-100 rounded-lg overflow-hidden">
-        <img src={imageBase64} alt="Mosaic" className="w-full h-auto" />
+        <img
+          ref={imageRef}
+          src={imageBase64}
+          alt="Mosaic"
+          aria-label={`Mosaic preview with ${tiles.length} tiles`}
+          className="w-full h-auto"
+          onLoad={() => {
+            if (!imageRef.current) return;
+            setRenderSize({ width: imageRef.current.clientWidth, height: imageRef.current.clientHeight });
+          }}
+        />
+        <div className="absolute inset-0 pointer-events-none" style={gridStyle} />
+
+        <div className="absolute inset-0 pointer-events-none">
+          {panels.map((panel) => {
+            const left = (panel.startColumn - 1) * tileSizePx * scaleX;
+            const top = (panel.startRow - 1) * tileSizePx * scaleY;
+            const width = panel.tilesWide * tileSizePx * scaleX;
+            const height = panel.tilesHigh * tileSizePx * scaleY;
+            return (
+              <div
+                key={`${panel.panelRow}-${panel.panelColumn}`}
+                className="absolute border-2 border-red-500 rounded-sm"
+                style={{ left, top, width, height }}
+              >
+                <span className="absolute -top-3 left-1 px-2 py-0.5 bg-red-500 text-white text-xs rounded shadow">
+                  {panel.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       <div className="bg-green-50 border border-green-200 rounded-lg p-3">

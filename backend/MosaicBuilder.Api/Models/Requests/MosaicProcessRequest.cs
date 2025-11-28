@@ -49,4 +49,28 @@ public class MosaicProcessRequest
     /// </summary>
     [Range(1, 10000, ErrorMessage = "Desired height must be between 1 and 10000 cm")]
     public int? DesiredHeightCm { get; set; }
+
+    /// <summary>
+    /// Tile width specified in centimeters (optional).
+    /// </summary>
+    [Range(0.1, 1000, ErrorMessage = "Tile width must be between 0.1 and 1000 cm")]
+    public double? TileWidthCm { get; set; }
+
+    /// <summary>
+    /// Tile height specified in centimeters (optional).
+    /// </summary>
+    [Range(0.1, 1000, ErrorMessage = "Tile height must be between 0.1 and 1000 cm")]
+    public double? TileHeightCm { get; set; }
+
+    /// <summary>
+    /// Panel width specified in centimeters for production layout (optional).
+    /// </summary>
+    [Range(0.1, 10000, ErrorMessage = "Panel width must be between 0.1 and 10000 cm")]
+    public double? PanelWidthCm { get; set; }
+
+    /// <summary>
+    /// Panel height specified in centimeters for production layout (optional).
+    /// </summary>
+    [Range(0.1, 10000, ErrorMessage = "Panel height must be between 0.1 and 10000 cm")]
+    public double? PanelHeightCm { get; set; }
 }

@@ -19,4 +19,24 @@ public class TileColorDto
     /// Hexadecimal color value
     /// </summary>
     public string Hex { get; set; } = string.Empty;
+
+    /// <summary>
+    /// One-based column index for export readability.
+    /// </summary>
+    public int Column { get; set; }
+
+    /// <summary>
+    /// One-based row index for export readability.
+    /// </summary>
+    public int Row { get; set; }
+
+    /// <summary>
+    /// Identifier assigned to the color family.
+    /// </summary>
+    public string ColorId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Identifier printed on the tile (mirrors the color identifier for production labels).
+    /// </summary>
+    public string TileId { get; set; } = string.Empty;
 }

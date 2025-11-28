@@ -48,7 +48,15 @@ export const en: Translations = {
       dimensions: 'Dimensions:',
       grid: 'Grid (tiles):',
       tileSize: 'Tile Size:',
-      totalTiles: 'Total Tiles:'
+      totalTiles: 'Total Tiles:',
+      physicalTile: 'Physical Tile (cm)',
+      tileWidthCm: 'Tile Width (cm)',
+      tileHeightCm: 'Tile Height (cm)',
+      physicalHint: 'Tile width/height will be converted to pixels using the image DPI.',
+      panelTitle: 'Panel Size (cm)',
+      panelWidthCm: 'Panel Width (cm)',
+      panelHeightCm: 'Panel Height (cm)',
+      panelHint: 'Define printable panel dimensions. Local coordinates start at (1,1).'
     },
     tips: {
       title: '💡 Tip:',
@@ -113,11 +121,19 @@ export const en: Translations = {
       stats: {
         gridSize: 'Grid Size',
         totalTiles: 'Total Tiles',
-        uniqueColors: 'Unique Colors'
+        uniqueColors: 'Unique Colors',
+        tileSize: 'Tile Size',
+        dpiDetected: 'DPI',
+        panels: 'Panels',
+        panelHint: 'Local coordinates reset in every panel'
       },
       exports: {
         csv: 'Export CSV',
-        json: 'Export JSON'
+        json: 'Export JSON',
+        gridJson: 'Grid JSON',
+        panelJson: 'Panel JSON',
+        tileIdCsv: 'Tile IDs CSV',
+        tileIdJson: 'Tile IDs JSON'
       },
       table: {
         title: 'Color Usage Summary',
