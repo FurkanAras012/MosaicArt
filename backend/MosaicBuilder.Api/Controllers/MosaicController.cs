@@ -18,7 +18,6 @@ public class MosaicController : ControllerBase
     private readonly IColorService _colorService;
     private readonly IQuantizationService _quantizationService;
     private readonly IRenderService _renderService;
-    private readonly IExportService _exportService;
     private readonly ILogger<MosaicController> _logger;
 
     public MosaicController(
@@ -27,7 +26,6 @@ public class MosaicController : ControllerBase
         IColorService colorService,
         IQuantizationService quantizationService,
         IRenderService renderService,
-        IExportService exportService,
         ILogger<MosaicController> logger)
     {
         _imageService = imageService ?? throw new ArgumentNullException(nameof(imageService));
@@ -35,7 +33,6 @@ public class MosaicController : ControllerBase
         _colorService = colorService ?? throw new ArgumentNullException(nameof(colorService));
         _quantizationService = quantizationService ?? throw new ArgumentNullException(nameof(quantizationService));
         _renderService = renderService ?? throw new ArgumentNullException(nameof(renderService));
-        _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -58,14 +55,11 @@ public class MosaicController : ControllerBase
             // Load and validate image
             using var image = await _imageService.LoadFromBase64Async(request.ImageBase64);
             var (imageWidth, imageHeight) = _imageService.GetDimensions(image);
-            var dpi = _imageService.GetDpi(image);
 
-            _logger.LogInformation("Image loaded successfully. Dimensions: {Width}x{Height} at {Dpi} DPI", imageWidth, imageHeight, dpi);
-
-            var tileSizeInfo = _tileService.CalculateTileSize(request.TileSize, request.TileWidthCm, request.TileHeightCm, dpi);
+            _logger.LogInformation("Image loaded successfully. Dimensions: {Width}x{Height}", imageWidth, imageHeight);
 
             // Calculate grid
-            var (gridWidth, gridHeight) = _tileService.CalculateGrid(imageWidth, imageHeight, tileSizeInfo.TileSizePixels);
+            var (gridWidth, gridHeight) = _tileService.CalculateGrid(imageWidth, imageHeight, request.TileSize);
 
             _logger.LogInformation("Grid calculated: {GridWidth}x{GridHeight}", gridWidth, gridHeight);
 
@@ -77,10 +71,10 @@ public class MosaicController : ControllerBase
             {
                 for (int x = 0; x < gridWidth; x++)
                 {
-                    int startX = x * tileSizeInfo.TileSizePixels;
-                    int startY = y * tileSizeInfo.TileSizePixels;
+                    int startX = x * request.TileSize;
+                    int startY = y * request.TileSize;
 
-                    var avgColor = _colorService.CalculateAverageColor(image, startX, startY, tileSizeInfo.TileSizePixels);
+                    var avgColor = _colorService.CalculateAverageColor(image, startX, startY, request.TileSize);
                     allColors.Add(avgColor);
                 }
             }
@@ -114,8 +108,6 @@ public class MosaicController : ControllerBase
                     break;
             }
 
-            var colorCodes = _tileService.GenerateColorCodes(palette);
-
             // Map colors to palette and create tile list
             int tileIndex = 0;
             for (int y = 0; y < gridHeight; y++)
@@ -127,18 +119,11 @@ public class MosaicController : ControllerBase
                         ? originalColor
                         : _colorService.FindClosestColor(originalColor, palette);
 
-                    var colorHex = mappedColor.ToHex();
-                    var colorId = colorCodes.TryGetValue(colorHex, out var resolvedCode) ? resolvedCode : "C00";
-
                     tileColors.Add(new TileColorDto
                     {
                         X = x,
                         Y = y,
-                        Column = x + 1,
-                        Row = y + 1,
-                        Hex = colorHex,
-                        ColorId = colorId,
-                        TileId = colorId
+                        Hex = mappedColor.ToHex()
                     });
                 }
             }
@@ -149,8 +134,7 @@ public class MosaicController : ControllerBase
                 .Select(g => new ColorSummaryDto
                 {
                     Hex = g.Key,
-                    Count = g.Count(),
-                    ColorId = colorCodes.TryGetValue(g.Key, out var resolvedCode) ? resolvedCode : "C00"
+                    Count = g.Count()
                 })
                 .OrderByDescending(s => s.Count)
                 .ToList();
@@ -158,38 +142,18 @@ public class MosaicController : ControllerBase
             _logger.LogInformation("Color summary generated. Unique colors: {UniqueColors}", paletteSummary.Count);
 
             // Render mosaic
-            using var mosaicImage = await _renderService.RenderMosaicAsync(tileColors, gridWidth, gridHeight, tileSizeInfo.TileSizePixels);
+            using var mosaicImage = await _renderService.RenderMosaicAsync(tileColors, gridWidth, gridHeight, request.TileSize);
             var base64Image = await _renderService.ToBase64Async(mosaicImage);
 
             _logger.LogInformation("Mosaic rendered successfully");
-
-            var grid = _tileService.BuildGrid(gridWidth, gridHeight, tileColors, colorCodes);
-            var panels = _tileService.BuildPanels(grid, request.PanelWidthCm, request.PanelHeightCm, dpi, tileSizeInfo.TileSizePixels);
-
-            var exports = new TileExportDto
-            {
-                GridJson = _exportService.BuildGridJson(grid),
-                PanelsJson = _exportService.BuildPanelJson(panels),
-                TileIdCsv = _exportService.BuildTileIdCsv(grid.Tiles),
-                TileIdJson = _exportService.BuildTileIdJson(grid.Tiles)
-            };
 
             var response = new MosaicProcessResponse
             {
                 GridWidth = gridWidth,
                 GridHeight = gridHeight,
                 Colors = tileColors,
-                Grid = new GridInfoDto
-                {
-                    GridWidth = gridWidth,
-                    GridHeight = gridHeight,
-                    Tiles = tileColors
-                },
                 PaletteSummary = paletteSummary,
-                TileSizeInfo = tileSizeInfo,
-                RenderImageBase64 = base64Image,
-                Panels = panels,
-                Exports = exports
+                RenderImageBase64 = base64Image
             };
 
             return Ok(response);

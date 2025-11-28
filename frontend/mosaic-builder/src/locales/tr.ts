@@ -48,15 +48,7 @@ export const tr: Translations = {
       dimensions: 'Boyutlar:',
       grid: 'Grid (taş):',
       tileSize: 'Taş Boyutu:',
-      totalTiles: 'Toplam Taş:',
-      physicalTile: 'Fiziksel Taş (cm)',
-      tileWidthCm: 'Taş Genişliği (cm)',
-      tileHeightCm: 'Taş Yüksekliği (cm)',
-      physicalHint: 'Taş ölçüleri görüntü DPI değerine göre piksele çevrilecek.',
-      panelTitle: 'Panel Boyutu (cm)',
-      panelWidthCm: 'Panel Genişliği (cm)',
-      panelHeightCm: 'Panel Yüksekliği (cm)',
-      panelHint: 'Panellerde koordinatlar 1,1 den başlar.'
+      totalTiles: 'Toplam Taş:'
     },
     tips: {
       title: '💡 İpucu:',
@@ -121,19 +113,11 @@ export const tr: Translations = {
       stats: {
         gridSize: 'Grid Boyutu',
         totalTiles: 'Toplam Taş',
-        uniqueColors: 'Benzersiz Renk',
-        tileSize: 'Taş Ölçüsü',
-        dpiDetected: 'DPI',
-        panels: 'Panel',
-        panelHint: 'Her panelde koordinatlar sıfırlanır'
+        uniqueColors: 'Benzersiz Renk'
       },
       exports: {
         csv: 'CSV Dışa Aktar',
-        json: 'JSON Dışa Aktar',
-        gridJson: 'Grid JSON',
-        panelJson: 'Panel JSON',
-        tileIdCsv: 'Taş Kodları CSV',
-        tileIdJson: 'Taş Kodları JSON'
+        json: 'JSON Dışa Aktar'
       },
       table: {
         title: 'Renk Kullanım Özeti',

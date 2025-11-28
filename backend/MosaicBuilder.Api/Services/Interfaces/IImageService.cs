@@ -30,11 +30,4 @@ public interface IImageService
     /// <param name="maxHeight">Maximum height</param>
     /// <returns>Resized image</returns>
     Task<Image<Rgba32>> ResizeIfNeededAsync(Image<Rgba32> image, int maxWidth, int maxHeight);
-
-    /// <summary>
-    /// Reads the DPI metadata from the provided image.
-    /// </summary>
-    /// <param name="image">Source image</param>
-    /// <returns>DPI value (falls back to 96 if metadata is missing)</returns>
-    double GetDpi(Image<Rgba32> image);
 }

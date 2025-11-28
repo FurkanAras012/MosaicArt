@@ -12,7 +12,6 @@ builder.Services.AddScoped<ITileService, TileService>();
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IQuantizationService, QuantizationService>();
 builder.Services.AddScoped<IRenderService, RenderService>();
-builder.Services.AddScoped<IExportService, ExportService>();
 
 // Add CORS
 builder.Services.AddCors(options =>

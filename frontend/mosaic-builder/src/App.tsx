@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { MosaicProcessRequest, MosaicProcessResponse, PaletteType } from './types/mosaic.types';
+import type { MosaicProcessResponse, PaletteType } from './types/mosaic.types';
 import { ImageUploader } from './components/mosaic/ImageUploader';
 import { TileSettings } from './components/mosaic/TileSettings';
 import { PaletteSelector } from './components/mosaic/PaletteSelector';
@@ -14,10 +14,6 @@ const AppContent: React.FC = () => {
   const [imageBase64, setImageBase64] = useState<string>('');
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
   const [tileSize, setTileSize] = useState<number>(10);
-  const [tileWidthCm, setTileWidthCm] = useState<number>(0);
-  const [tileHeightCm, setTileHeightCm] = useState<number>(0);
-  const [panelWidthCm, setPanelWidthCm] = useState<number>(0);
-  const [panelHeightCm, setPanelHeightCm] = useState<number>(0);
   const [paletteType, setPaletteType] = useState<PaletteType>('dynamic');
   const [paletteSize, setPaletteSize] = useState<number>(256);
   const [customPalette, setCustomPalette] = useState<string[]>([]);
@@ -46,19 +42,13 @@ const AppContent: React.FC = () => {
     setMosaicResult(null);
 
     try {
-      const requestBody: MosaicProcessRequest = {
+      const response = await mosaicApi.processMosaic({
         imageBase64,
         tileSize,
         paletteType,
         paletteSize: paletteType === 'kmeans' ? paletteSize : undefined,
         customPalette: paletteType === 'custom' ? customPalette : undefined,
-        tileWidthCm: tileWidthCm > 0 ? tileWidthCm : undefined,
-        tileHeightCm: tileHeightCm > 0 ? tileHeightCm : undefined,
-        panelWidthCm: panelWidthCm > 0 ? panelWidthCm : undefined,
-        panelHeightCm: panelHeightCm > 0 ? panelHeightCm : undefined,
-      };
-
-      const response = await mosaicApi.processMosaic(requestBody);
+      });
 
       setMosaicResult(response);
     } catch (err) {
@@ -100,14 +90,6 @@ const AppContent: React.FC = () => {
                   onTileSizeChange={setTileSize}
                   imageWidth={imageDimensions.width}
                   imageHeight={imageDimensions.height}
-                  tileWidthCm={tileWidthCm}
-                  tileHeightCm={tileHeightCm}
-                  panelWidthCm={panelWidthCm}
-                  panelHeightCm={panelHeightCm}
-                  onTileWidthCmChange={setTileWidthCm}
-                  onTileHeightCmChange={setTileHeightCm}
-                  onPanelWidthCmChange={setPanelWidthCm}
-                  onPanelHeightCmChange={setPanelHeightCm}
                   disabled={isProcessing}
                 />
               </div>
@@ -163,32 +145,16 @@ const AppContent: React.FC = () => {
                   imageBase64={mosaicResult.renderImageBase64}
                   gridWidth={mosaicResult.gridWidth}
                   gridHeight={mosaicResult.gridHeight}
-                  tileSizePx={mosaicResult.tileSizeInfo.tileSizePixels}
-                  tiles={mosaicResult.colors}
-                  panels={mosaicResult.panels}
                 />
               </div>
 
               <div className="bg-white rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold mb-4">4. {t.results.analysis.title}</h2>
-                {(() => {
-                  const panelCount = mosaicResult.panels.length
-                    ? {
-                        x: Math.max(...mosaicResult.panels.map((panel) => panel.panelColumn)) + 1,
-                        y: Math.max(...mosaicResult.panels.map((panel) => panel.panelRow)) + 1,
-                      }
-                    : { x: 0, y: 0 };
-                  return (
-                    <ResultsPanel
-                      paletteSummary={mosaicResult.paletteSummary}
-                      gridWidth={mosaicResult.gridWidth}
-                      gridHeight={mosaicResult.gridHeight}
-                      tileSizeInfo={mosaicResult.tileSizeInfo}
-                      exports={mosaicResult.exports}
-                      panelCount={panelCount}
-                    />
-                  );
-                })()}
+                <ResultsPanel
+                  paletteSummary={mosaicResult.paletteSummary}
+                  gridWidth={mosaicResult.gridWidth}
+                  gridHeight={mosaicResult.gridHeight}
+                />
               </div>
             </>
           )}
