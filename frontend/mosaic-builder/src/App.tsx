@@ -10,7 +10,7 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { mosaicApi } from './services/mosaicApi';
 
 const AppContent: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [imageBase64, setImageBase64] = useState<string>('');
   const [imageDimensions, setImageDimensions] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
   const [tileSize, setTileSize] = useState<number>(10);
@@ -33,7 +33,7 @@ const AppContent: React.FC = () => {
     }
 
     if (paletteType === 'custom' && customPalette.length === 0) {
-      setError('Please add at least one color to your custom palette');
+      setError(t.processing.customPaletteRequired);
       return;
     }
 
@@ -53,7 +53,7 @@ const AppContent: React.FC = () => {
       setMosaicResult(response);
     } catch (err) {
       console.error('Error processing mosaic:', err);
-      setError(err instanceof Error ? err.message : 'Failed to process mosaic. Please try again.');
+      setError(err instanceof Error ? err.message : t.processing.failed);
     } finally {
       setIsProcessing(false);
     }
@@ -140,7 +140,7 @@ const AppContent: React.FC = () => {
           {mosaicResult && (
             <>
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4">3. Your Mosaic</h2>
+                <h2 className="text-2xl font-semibold mb-4">3. {t.results.mosaic.title}</h2>
                 <MosaicRenderer
                   imageBase64={mosaicResult.renderImageBase64}
                   gridWidth={mosaicResult.gridWidth}
@@ -149,7 +149,7 @@ const AppContent: React.FC = () => {
               </div>
 
               <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4">4. Color Analysis</h2>
+                <h2 className="text-2xl font-semibold mb-4">4. {t.results.analysis.title}</h2>
                 <ResultsPanel
                   paletteSummary={mosaicResult.paletteSummary}
                   gridWidth={mosaicResult.gridWidth}
@@ -166,11 +166,7 @@ const AppContent: React.FC = () => {
                 <div className="flex flex-col items-center space-y-4">
                   <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
                   <p className="text-xl font-semibold text-gray-900">{t.processing.processing}</p>
-                  <p className="text-sm text-gray-600 text-center">
-                    {language === 'tr' 
-                      ? 'Bu işlem görsel boyutu ve ayarlara bağlı olarak birkaç dakika sürebilir'
-                      : 'This may take a few moments depending on image size and settings'}
-                  </p>
+                  <p className="text-sm text-gray-600 text-center">{t.processing.processingHint}</p>
                 </div>
               </div>
             </div>
@@ -179,7 +175,7 @@ const AppContent: React.FC = () => {
 
         {/* Footer */}
         <footer className="mt-12 text-center text-gray-500 text-sm">
-          <p>MosaicBuilder - Production-Ready Mosaic Generation System</p>
+          <p>{t.footer}</p>
         </footer>
       </div>
     </div>

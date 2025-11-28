@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ColorSummary } from '../../types/mosaic.types';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface ResultsPanelProps {
   paletteSummary: readonly ColorSummary[];
@@ -8,15 +9,16 @@ interface ResultsPanelProps {
 }
 
 export const ResultsPanel: React.FC<ResultsPanelProps> = ({ paletteSummary, gridWidth, gridHeight }) => {
+  const { t } = useLanguage();
   const totalTiles = gridWidth * gridHeight;
   const uniqueColors = paletteSummary.length;
 
   const handleExportCSV = () => {
     const csvContent = [
-      'Color,Hex,Count,Percentage',
+      `${t.results.analysis.table.color},${t.results.analysis.table.hexCode},${t.results.analysis.table.tileCount},${t.results.analysis.table.percentage}`,
       ...paletteSummary.map((color, index) => {
         const percentage = ((color.count / totalTiles) * 100).toFixed(2);
-        return `Color ${index + 1},${color.hex},${color.count},${percentage}%`;
+        return `${t.results.analysis.table.colorLabelPrefix} ${index + 1},${color.hex},${color.count},${percentage}%`;
       }),
     ].join('\n');
 
@@ -59,17 +61,17 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ paletteSummary, grid
       {/* Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <p className="text-sm text-blue-600 font-medium mb-1">Grid Size</p>
+          <p className="text-sm text-blue-600 font-medium mb-1">{t.results.analysis.stats.gridSize}</p>
           <p className="text-2xl font-bold text-blue-900">
             {gridWidth} × {gridHeight}
           </p>
         </div>
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <p className="text-sm text-green-600 font-medium mb-1">Total Tiles</p>
+          <p className="text-sm text-green-600 font-medium mb-1">{t.results.analysis.stats.totalTiles}</p>
           <p className="text-2xl font-bold text-green-900">{totalTiles.toLocaleString()}</p>
         </div>
         <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-          <p className="text-sm text-purple-600 font-medium mb-1">Unique Colors</p>
+          <p className="text-sm text-purple-600 font-medium mb-1">{t.results.analysis.stats.uniqueColors}</p>
           <p className="text-2xl font-bold text-purple-900">{uniqueColors}</p>
         </div>
       </div>
@@ -88,7 +90,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ paletteSummary, grid
               d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          Export CSV
+          {t.results.analysis.exports.csv}
         </button>
         <button
           onClick={handleExportJSON}
@@ -102,30 +104,30 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ paletteSummary, grid
               d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
             />
           </svg>
-          Export JSON
+          {t.results.analysis.exports.json}
         </button>
       </div>
 
       {/* Color Summary Table */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Color Usage Summary</h3>
+          <h3 className="text-lg font-semibold text-gray-900">{t.results.analysis.table.title}</h3>
         </div>
         <div className="max-h-96 overflow-y-auto">
           <table className="w-full">
             <thead className="bg-gray-50 sticky top-0">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Color
+                  {t.results.analysis.table.color}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Hex Code
+                  {t.results.analysis.table.hexCode}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tile Count
+                  {t.results.analysis.table.tileCount}
                 </th>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Percentage
+                  {t.results.analysis.table.percentage}
                 </th>
               </tr>
             </thead>
@@ -140,7 +142,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({ paletteSummary, grid
                           className="w-8 h-8 rounded border border-gray-300 shadow-sm"
                           style={{ backgroundColor: color.hex }}
                         />
-                        <span className="text-sm text-gray-500">#{index + 1}</span>
+                        <span className="text-sm text-gray-500">{`${t.results.analysis.table.colorLabelPrefix} ${index + 1}`}</span>
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">

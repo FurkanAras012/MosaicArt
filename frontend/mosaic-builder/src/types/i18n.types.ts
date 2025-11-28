@@ -6,6 +6,7 @@ export interface Translations {
   // Header
   title: string;
   subtitle: string;
+  footer: string;
   
   // Image Upload
   imageUpload: {
@@ -14,10 +15,17 @@ export interface Translations {
     browse: string;
     supportedFormats: string;
     maxSize: string;
+    dropActive: string;
+    uploadCta: string;
+    uploadOr: string;
+    uploadHelp: string;
     error: {
       invalidFormat: string;
       fileTooLarge: string;
       uploadFailed: string;
+      selectValidFile: string;
+      loadDimensionsFailed: string;
+      readFileFailed: string;
     };
   };
   
@@ -27,6 +35,32 @@ export interface Translations {
     tileSize: string;
     gridPreview: string;
     gridSize: string;
+    sizingMode: string;
+    modeOptions: {
+      tileSize: string;
+      width: string;
+      height: string;
+    };
+    labels: {
+      tileSizeValue: string;
+      targetWidth: string;
+      targetHeight: string;
+      widthResult: string;
+      heightResult: string;
+      unitCm: string;
+      ratioPreserved: string;
+      resultPreview: string;
+      dimensions: string;
+      grid: string;
+      tileSize: string;
+      totalTiles: string;
+    };
+    tips: {
+      title: string;
+      tileSize: string;
+      width: string;
+      height: string;
+    };
   };
   
   // Palette
@@ -47,6 +81,8 @@ export interface Translations {
         title: string;
         description: string;
         addColor: string;
+        paletteLabel: string;
+        emptyNote: string;
         colorError: {
           invalid: string;
           duplicate: string;
@@ -56,12 +92,14 @@ export interface Translations {
   };
   
   // Processing
-  processing: {
-    button: string;
-    processing: string;
-    uploadFirst: string;
-    customPaletteRequired: string;
-  };
+    processing: {
+      button: string;
+      processing: string;
+      uploadFirst: string;
+      customPaletteRequired: string;
+      processingHint: string;
+      failed: string;
+    };
   
   // Results
   results: {
@@ -71,6 +109,33 @@ export interface Translations {
     downloadImage: string;
     exportCsv: string;
     exportJson: string;
+    mosaic: {
+      title: string;
+      sectionTitle: string;
+      gridLabel: string;
+      download: string;
+      success: string;
+    };
+    analysis: {
+      title: string;
+      stats: {
+        gridSize: string;
+        totalTiles: string;
+        uniqueColors: string;
+      };
+      exports: {
+        csv: string;
+        json: string;
+      };
+      table: {
+        title: string;
+        color: string;
+        hexCode: string;
+        tileCount: string;
+        percentage: string;
+        colorLabelPrefix: string;
+      };
+    };
   };
   
   // Common
@@ -84,5 +149,6 @@ export interface Translations {
     edit: string;
     add: string;
     remove: string;
+    note?: string;
   };
 }
